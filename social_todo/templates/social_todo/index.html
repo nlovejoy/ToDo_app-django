@@ -1,0 +1,22 @@
+{% extends "social_todo/base.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+      {% include "social_todo/task_list.html" %}
+    {% else %}
+      <h1>Log In SUCKA,,, what do you think this is, a Holiday Inn?</h1>
+      {% include "social_todo/login.html" %}
+      <br>
+      {% include "social_todo/register.html" %}
+      <br>
+      {% include "social_todo/register2.html" %}
+    {% endif %}
+
+    {% if user.is_authenticated %}
+      <br>
+      <a href="/social_todo/logout/">Logout</a><br />
+      {% else %}
+      <a href="/social_todo/register/">Register Here</a><br />
+      <a href="/social_todo/login/">Login</a><br />
+    {% endif %}
+{% endblock %}

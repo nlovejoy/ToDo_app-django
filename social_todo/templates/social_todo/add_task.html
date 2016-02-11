@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nick's Neat ToDo</title>
+    </head>
+
+    <body>
+        <h1>Add a Task</h1>
+
+        <form id="task_form" method="post" action="/social_todo/add_task/">
+
+            {% csrf_token %}
+
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+
+            <input type="submit" name="submit" value="Create Task" />
+        </form>
+    </body>
+
+</html>

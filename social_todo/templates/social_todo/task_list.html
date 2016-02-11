@@ -1,0 +1,13 @@
+<h1>Nick says... hello {{ user.username }}!</h1>
+{% if tasks %}
+  <ul>
+      {% for task in tasks %}
+      <li>{{ task.title }}</li>
+      <li><a href="/social_todo/task/{{ task.url }}">{{ task.name }}</a></li>
+      {% endfor %}
+  </ul>
+  <a href="/social_todo/add_task/">Add a New Task</a>
+{% else %}
+  <strong>There are no tasks present.</strong> <br>
+  <a href="/social_todo/add_task/">Add a New Task</a>
+{% endif %}
