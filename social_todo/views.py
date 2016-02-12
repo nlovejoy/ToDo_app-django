@@ -10,23 +10,23 @@ from django.contrib import auth
 
 
 def index(request):
-    # # Request the context of the request.
-    # # The context contains information such as the client's machine details, for example.
-    # context = RequestContext(request)
-    #
-    # # Query the database for a list of ALL categories currently stored.
-    # # Order the categories by no. likes in descending order.
-    # # Retrieve the top 5 only - or all if less than 5.
-    # # Place the list in our context_dict dictionary which will be passed to the template engine.
-    # task_list = Tasks.objects.all()
-    # context_dict = {'tasks': task_list}
-    #
-    # # We loop through each category returned, and create a URL attribute.
-    # # This attribute stores an encoded URL (e.g. spaces replaced with underscores).
-    # for task in task_list:
-    #     task.url = task.title.replace(' ', '_')
+    # Request the context of the request.
+    # The context contains information such as the client's machine details, for example.
+    context = RequestContext(request)
 
-    # Render the response and send it back!
+    # Query the database for a list of ALL categories currently stored.
+    # Order the categories by no. likes in descending order.
+    # Retrieve the top 5 only - or all if less than 5.
+    # Place the list in our context_dict dictionary which will be passed to the template engine.
+    task_list = Tasks.objects.all()
+    context_dict = {'tasks': task_list}
+
+    # We loop through each category returned, and create a URL attribute.
+    # This attribute stores an encoded URL (e.g. spaces replaced with underscores).
+    for task in task_list:
+        task.url = task.title.replace(' ', '_')
+
+    #Render the response and send it back!
     return render(request, 'social_todo/index.html')#, context_dict, context)
 
 
@@ -136,7 +136,7 @@ def user_login(request):
         else:
             # Bad login details were provided. So we can't log the user in.
             print ("Invalid login details: {0}, {1}".format(username, password))
-            return HttpResponse("Invalid login details supplied.")
+            return HttpResponse("Invalid email address")
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.

@@ -10,11 +10,16 @@
         <form id="task_form" method="post" action="/social_todo/add_task/">
 
             {% csrf_token %}
-
+            Task Title: <input type="text" name="title" value="" size="50" />
+            <br />
+            Task Description: <input type="text" name="description" value="" size="50" />
+            <br />
+            Collaborators: <input type="email" name="collaborators" value="" size="50" />
+            <br />
             {% for field in form.visible_fields %}
                 {{ field.errors }}
                 {{ field.help_text }}
-                {{ field }}
+                <!-- {{ field }} -->
             {% endfor %}
 
             <input type="submit" name="submit" value="Create Task" />

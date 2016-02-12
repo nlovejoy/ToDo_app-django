@@ -3,6 +3,7 @@
    <h2>register_user</h2>
 
    <form id="login_form" method="post" action="/social_todo/register_user/">
+     {% csrf_token %}
      Email: <input type="email" name="email" value="" size="50" />
      <br />
      First Name: <input type="text" name="first_name" value="" size="50" />
@@ -11,12 +12,11 @@
      <br />
      Password: <input type="password" name="password1" value="" size="50" />
      <br />
-     Password: <input type="password" name="password2" value="" size="50" />
+     Confirm Password: <input type="password" name="password2" value="" size="50" />
      <br />
-     {% csrf_token %}
-     {{form.as_p}}
-     <input type="submit" value="Register" />
 
+     {{form.as_p}}
+     <input type="submit" value="Register" class="sign-up-submit"/>
    </form>
 
  {% endblock %}

@@ -10,6 +10,8 @@
 
     {% if user.is_authenticated %}
       {% include "social_todo/task_list.html" %}
+      <br>
+      {% include "social_todo/add_task.html" %}
     {% else %}
       <h1>Log In SUCKA,,, what do you think this is, a Holiday Inn?</h1>
       {% include "social_todo/login.html" %}
@@ -19,10 +21,9 @@
 
     {% if user.is_authenticated %}
       <br>
-      <a href="/social_todo/logout/">Logout</a><br />
+      <a href="/social_todo/user/logout/">Logout</a><br />
       {% else %}
-      <a href="/social_todo/register/">Register Here</a><br />
-      <a href="/social_todo/login/">Login</a><br />
+
     {% endif %}
 
 </body>
