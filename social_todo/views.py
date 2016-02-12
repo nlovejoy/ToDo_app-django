@@ -1,32 +1,34 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
-from social_todo.forms import UserForm, NewTaskForm
+from social_todo.forms import UserForm, NewTaskForm, MyRegistrationForm
 from django.contrib.auth import logout, authenticate, login
 from social_todo.models import Tasks, UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.context_processors import csrf
+from django.contrib import auth
+
 
 def index(request):
-
-    # Request the context of the request.
-    # The context contains information such as the client's machine details, for example.
-    context = RequestContext(request)
-
-    # Query the database for a list of ALL categories currently stored.
-    # Order the categories by no. likes in descending order.
-    # Retrieve the top 5 only - or all if less than 5.
-    # Place the list in our context_dict dictionary which will be passed to the template engine.
-    task_list = Tasks.objects.all()
-    context_dict = {'tasks': task_list}
-
-    # We loop through each category returned, and create a URL attribute.
-    # This attribute stores an encoded URL (e.g. spaces replaced with underscores).
-    for task in task_list:
-        task.url = task.title.replace(' ', '_')
+    # # Request the context of the request.
+    # # The context contains information such as the client's machine details, for example.
+    # context = RequestContext(request)
+    #
+    # # Query the database for a list of ALL categories currently stored.
+    # # Order the categories by no. likes in descending order.
+    # # Retrieve the top 5 only - or all if less than 5.
+    # # Place the list in our context_dict dictionary which will be passed to the template engine.
+    # task_list = Tasks.objects.all()
+    # context_dict = {'tasks': task_list}
+    #
+    # # We loop through each category returned, and create a URL attribute.
+    # # This attribute stores an encoded URL (e.g. spaces replaced with underscores).
+    # for task in task_list:
+    #     task.url = task.title.replace(' ', '_')
 
     # Render the response and send it back!
-    return render_to_response('social_todo/index.html', context_dict, context)
+    return render(request, 'social_todo/index.html')#, context_dict, context)
+
 
 def task(request, task_name_url):
     # Request our context from the request passed to us.
@@ -89,65 +91,19 @@ def add_task(request):
     # Render the form with error messages (if any).
     return render_to_response('social_todo/add_task.html', {'form': form}, context)
 
-def register(request):
-    # Like before, get the request's context.
-    context = RequestContext(request)
-
-    # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
-    registered = False
-
-    # If it's a HTTP POST, we're interested in processing form data.
+def register_user(request):
     if request.method == 'POST':
-        # Attempt to grab information from the raw form information.
-        # Note that we make use of both UserForm and UserProfileForm.
-        user_form = UserForm(data=request.POST)
-
-        # If the two forms are valid...
-        if user_form.is_valid():
-            # Save the user's form data to the database.
-            user = user_form.save()
-
-            # Now we hash the password with the set_password method.
-            # Once hashed, we can update the user object.
-            user.set_password(user.password)
-            user.save()
-
-            # Update our variable to tell the template registration was successful.
-            registered = True
-
-        # Invalid form or forms - mistakes or something else?
-        # Print problems to the terminal.
-        # They'll also be shown to the user.
-        else:
-            print (user_form.errors)
-
-    # Not a HTTP POST, so we render our form using two ModelForm instances.
-    # These forms will be blank, ready for user input.
+        form = MyRegistrationForm(request.POST)     # create form object
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/social_todo/')
     else:
-        user_form = UserForm()
+        form = MyRegistrationForm()
+    token = {}
+    token.update(csrf(request))
+    token['form'] = form
 
-    # Render the template depending on the context.
-    return render_to_response(
-            'social_todo/',
-            {'user_form': user_form, 'registered': registered},
-            context)
-
-def register2(request):
-     if request.method == 'POST':
-         form = UserCreationForm(request.POST)
-         if form.is_valid():
-             form.save()
-             return HttpResponseRedirect('/social_todo/')
-
-     else:
-         form = UserCreationForm()
-     token = {}
-     token.update(csrf(request))
-     token['form'] = form
-
-     return render_to_response('social_todo/register2.html', token)
-
+    return render_to_response('social_todo/register_user.html', token)
 
 def user_login(request):
     # Like before, obtain the context for the user's request.
