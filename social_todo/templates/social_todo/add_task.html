@@ -19,7 +19,7 @@
             {% for field in form.visible_fields %}
                 {{ field.errors }}
                 {{ field.help_text }}
-                <!-- {{ field }} -->
+                {{ field }}
             {% endfor %}
 
             <input type="submit" name="submit" value="Create Task" />
