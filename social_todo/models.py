@@ -22,7 +22,7 @@ class Tasks(models.Model):
 
 class Users(models.Model):
     email = models.EmailField(max_length=50)
-    name = models.CharField(max_length=50)
+    fl_name = models.CharField(max_length=50)
     hashed_password = models.CharField(max_length=50)
 
     def __str__(self):
