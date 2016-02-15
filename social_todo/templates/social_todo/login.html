@@ -4,11 +4,15 @@
     <body>
         <h1>Login to Nick's Neat Social ToDo App</h1>
 
-        <form id="login_form" class="login" method="post" action="/social_todo/login/">
+        {% if form.errors %}
+                <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+
+        <form id="login_form" class="login" method="post" action="/user/login">
             {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
+            Email: <input name="email" type="email" value="" size="50" />
             <br />
-            Password: <input type="password" name="password" value="" size="50" />
+            Password: <input type="password" name="hashed_password" value="" size="50" />
             <br />
 
             <input type="submit" class="log-in-submit" value="Log In" />

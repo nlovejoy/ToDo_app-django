@@ -7,14 +7,16 @@
     <body>
         <h1>Add a Task</h1>
 
-        <form id="task_form" method="post" action="/social_todo/add_task/">
+        <form id="task_form" method="post" action="/task/create">
 
             {% csrf_token %}
             Task Title: <input type="text" name="title" value="" size="50" />
             <br />
             Task Description: <input type="text" name="description" value="" size="50" />
             <br />
-            Collaborators: <input type="email" name="collaborators" value="" size="50" />
+            Collaborator1: <input name="collaborator1" type="email" /><br>
+            Collaborator2: <input name="collaborator2" type="email" /><br>
+            Collaborator3: <input name="collaborator3" type="email" /><br>
             <br />
             {% for field in form.visible_fields %}
                 {{ field.errors }}

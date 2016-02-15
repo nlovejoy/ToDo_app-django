@@ -1,9 +1,9 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
-from social_todo.forms import UserForm, NewTaskForm, MyRegistrationForm
+from social_todo.forms import NewTaskForm, MyRegistrationForm, LoginForm #,UserForm
 from django.contrib.auth import logout, authenticate, login
-from social_todo.models import Tasks, UserProfile
+from social_todo.models import Tasks, Users #,UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.context_processors import csrf
 from django.contrib import auth
@@ -93,11 +93,11 @@ def add_task(request):
 
 def register_user(request):
     if request.method == 'POST':
-        form = MyRegistrationForm(request.POST)     # create form object
+        form = MyRegistrationForm(request.POST)     # create form populated with data
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/social_todo/')
-    else:
+    else:#if not a POST request, then send back the blank form
         form = MyRegistrationForm()
     token = {}
     token.update(csrf(request))
@@ -105,26 +105,15 @@ def register_user(request):
 
     return render_to_response('social_todo/register_user.html', token)
 
-def user_login(request):
-    # Like before, obtain the context for the user's request.
-    context = RequestContext(request)
-
-    # If the request is a HTTP POST, try to pull out the relevant information.
+def login(request):
+    context = RequestContext(request) #obtain context for user request
     if request.method == 'POST':
-        # Gather the username and password provided by the user.
-        # This information is obtained from the login form.
-        username = request.POST['username']
-        password = request.POST['password']
+        email = request.POST['email'] # Gather the username and pw from login form
+        hashed_password = request.POST['hashed_password']
 
-        # Use Django's machinery to attempt to see if the username/password
-        # combination is valid - a User object is returned if it is.
-        user = authenticate(username=username, password=password)
-
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
-        if user:
-            # Is the account active? It could have been disabled.
+        #see if email and pw are valid
+        user = authenticate(email=email, hashed_password=hashed_password)
+        if user: # Is the account active? It could have been disabled.
             if user.is_active:
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
@@ -135,15 +124,51 @@ def user_login(request):
                 return HttpResponse("Your Neat account is disabled SUCKA.")
         else:
             # Bad login details were provided. So we can't log the user in.
-            print ("Invalid login details: {0}, {1}".format(username, password))
+            print ("Invalid login details: {0}, {1}".format(email, hashed_password))
             return HttpResponse("Invalid email address")
 
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
-    else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
+    else:# This scenario would most likely be a HTTP GET, so display form
         return render_to_response('social_todo/login.html', {}, context)
+#
+# def user_login(request):
+#     # Like before, obtain the context for the user's request.
+#     context = RequestContext(request)
+#
+#     # If the request is a HTTP POST, try to pull out the relevant information.
+#     if request.method == 'POST':
+#         # Gather the username and password provided by the user.
+#         # This information is obtained from the login form.
+#         username = request.POST['username']
+#         password = request.POST['password']
+#
+#         # Use Django's machinery to attempt to see if the username/password
+#         # combination is valid - a User object is returned if it is.
+#         user = authenticate(username=username, password=password)
+#
+#         # If we have a User object, the details are correct.
+#         # If None (Python's way of representing the absence of a value), no user
+#         # with matching credentials was found.
+#         if user:
+#             # Is the account active? It could have been disabled.
+#             if user.is_active:
+#                 # If the account is valid and active, we can log the user in.
+#                 # We'll send the user back to the homepage.
+#                 login(request, user)
+#                 return HttpResponseRedirect('/social_todo/')
+#             else:
+#                 # An inactive account was used - no logging in!
+#                 return HttpResponse("Your Neat account is disabled SUCKA.")
+#         else:
+#             # Bad login details were provided. So we can't log the user in.
+#             print ("Invalid login details: {0}, {1}".format(username, password))
+#             return HttpResponse("Invalid email address")
+#
+#     # The request is not a HTTP POST, so display the login form.
+#     # This scenario would most likely be a HTTP GET.
+#     else:
+#         # No context variables to pass to the template system, hence the
+#         # blank dictionary object...
+#         return render_to_response('social_todo/login.html', {}, context)
 
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.

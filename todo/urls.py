@@ -19,4 +19,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^social_todo/', include('social_todo.urls')),
+    url(r'^user/', include('social_todo.urls')),
+    url(r'^task/', include('social_todo.urls')),
 ]

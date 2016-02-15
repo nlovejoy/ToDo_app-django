@@ -2,13 +2,11 @@
 
    <h2>register_user</h2>
 
-   <form id="login_form" method="post" action="/social_todo/register_user/">
+   <form id="login_form" method="post" action="/user/register">
      {% csrf_token %}
      Email: <input type="email" name="email" value="" size="50" />
      <br />
-     First Name: <input type="text" name="first_name" value="" size="50" />
-     <br />
-     Last Name: <input type="text" name="last_name" value="" size="50" />
+     First &amp; Last Name: <input type="text" name="fl_name" value="" size="50" />
      <br />
      Password: <input type="password" name="password1" value="" size="50" />
      <br />
