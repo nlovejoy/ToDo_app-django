@@ -1,20 +1,4 @@
 {% block content %}
-
-   <h2>register_user</h2>
-
-   <form id="login_form" method="post" action="/user/register">
-     {% csrf_token %}
-     Email: <input type="email" name="email" value="" size="50" />
-     <br />
-     First &amp; Last Name: <input type="text" name="fl_name" value="" size="50" />
-     <br />
-     Password: <input type="password" name="password1" value="" size="50" />
-     <br />
-     Confirm Password: <input type="password" name="password2" value="" size="50" />
-     <br />
-
-     {{ form }} 
-     <input type="submit" value="Register" class="sign-up-submit"/>
-   </form>
-
- {% endblock %}
+  <h2>register_user</h2>
+  {% include "social_todo/registration_form.html" %}
+{% endblock %}

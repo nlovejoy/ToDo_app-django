@@ -21,14 +21,3 @@ class MyRegistrationForm(forms.ModelForm):
     class Meta:
         model = Users
         fields = ('email', 'fl_name', 'hashed_password')
-
-    def save(self,commit = True):
-        #user = super(MyRegistrationForm, self).save(commit = False)
-        Users.email = self.cleaned_data['email']
-        Users.name = self.cleaned_data['fl_name']
-        Users.hashed_password = self.cleaned_data['hashed_password']
-
-        if commit:
-            Users.save()
-
-        return Users
