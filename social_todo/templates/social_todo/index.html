@@ -9,6 +9,7 @@
 
 
     {% if user.is_authenticated %}
+      <h1>Nikko says... hello {{ user.username }}!</h1>
       {% include "social_todo/task_list.html" %}
       <br>
       {% include "social_todo/add_task.html" %}

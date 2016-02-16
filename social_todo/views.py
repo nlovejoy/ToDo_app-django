@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from social_todo.forms import NewTaskForm, MyRegistrationForm, LoginForm #,UserForm
 from django.contrib.auth import logout, authenticate, login
-from social_todo.models import Tasks, Users, Users2 #,UserProfile
+from social_todo.models import Task, User#, Users2 ,UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.context_processors import csrf
 from django.contrib import auth
@@ -18,8 +18,8 @@ def index(request):
     # Order the categories by no. likes in descending order.
     # Retrieve the top 5 only - or all if less than 5.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
-    task_list = Tasks.objects.all()
-    context_dict = {'tasks': task_list}
+    task_list = Task.objects.all()
+    context_dict = {'task': task_list}
 
     # We loop through each category returned, and create a URL attribute.
     # This attribute stores an encoded URL (e.g. spaces replaced with underscores).
@@ -47,7 +47,7 @@ def task(request, task_name_url):
         # Can we find a category with the given name?
         # If we can't, the .get() method raises a DoesNotExist exception.
         # So the .get() method returns one model instance or raises an exception.
-        task = Tasks.objects.get(title=task_title)
+        task = Task.objects.get(title=task_title)
 
         # Retrieve all of the associated pages.
         # Note that filter returns >= 1 model instance.
@@ -107,32 +107,63 @@ def register_user(request):
 
     return render_to_response('social_todo/register_user.html', token)
 
-def login(request):
-    context = RequestContext(request) #obtain context for user request
-    if request.method == 'POST':
-        #see if email and pw are valid
-        email = request.POST['email'] # Gather the username and pw from login form
-        hpassword = request.POST['password']
-        user = authenticate(email=email, password=password)
-        print (email)
-        print (hashed_password)
-        if user is not None: # Is the account active? It could have been disabled.
-            if user.is_active:
-                print("User is valid, active and authenticated")
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
-                login(request, user)
-                return HttpResponseRedirect('/social_todo/')
-            else:
-                # An inactive account was used - no logging in!
-                return HttpResponse("Your Neat account is disabled SUCKA.")
-        else:
-            # Bad login details were provided. So we can't log the user in.
-            print ("Invalid login details: {0}, {1}".format(email, hashed_password))
-            return HttpResponseRedirect('/social_todo/')
+# def login(request):
+#     context = RequestContext(request) #obtain context for user request
+#     if request.method == 'POST':
+#         #see if email and pw are valid
+#         form = loginForm(request.POST)
+#         user = request.POST['username'] # Gather the username and pw from login form
+#         password = request.POST['password']
+#         user = authenticate(user=user, password=password)
+#         print (user)
+#         print (password)
+#         if user is not None: # Is the account active? It could have been disabled.
+#             if user.is_active:
+#                 print("User is valid, active and authenticated")
+#                 # If the account is valid and active, we can log the user in.
+#                 # We'll send the user back to the homepage.
+#                 login(request, user)
+#                 return HttpResponseRedirect('/social_todo/')
+#             else:
+#                 # An inactive account was used - no logging in!
+#                 return HttpResponse("Your Neat account is disabled SUCKA.")
+#         else:
+#             # Bad login details were provided. So we can't log the user in.
+#             print ("Invalid login details: {0}, {1}".format(user, password))
+#             return HttpResponseRedirect('/social_todo/')
+#
+#     else:# This scenario would most likely be a HTTP GET, so display form
+#         form = loginForm(request.POST)
+#         token = {}
+#         token.update(csrf(request))
+#         token['form'] = form
+#         return render_to_response('social_todo/login.html', token)
 
-    else:# This scenario would most likely be a HTTP GET, so display form
-        return render_to_response('social_todo/login.html', {}, context)
+def login(request):
+    context = RequestContext(request)
+    # def errorHandler(error):
+    #      return render_to_response('social_todo/index.html', {'error' : error})
+    if request.method == 'POST': #if the method is POST
+        username = request.POST['username']
+        password = request.POST['password'] #Check that username and pw are valid
+        user = authenticate(username = username, password = password)
+        print (user)
+        if user:
+            if user.is_active:
+                login(request, user)
+                print ('user is active')
+                return HttpResponseRedirect('social_todo/index.html')
+            else:
+                # error = 'Account disabled.'
+                print ('Account disabled.')
+                # return errorHandler(error)
+        else:
+            print ('user is = None')
+    else:
+        # error = 'Invalid details entered.'
+        # return errorHandler(error)
+        print ('invalid details')
+    return render_to_response('social_todo/index.html', {}, context)
 
 
 def user_logout(request):
