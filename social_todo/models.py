@@ -20,3 +20,18 @@ class Users(models.Model):
 
     def __str__(self):
             return self.email
+
+class Users2(models.Model):
+    user = models.OneToOneField(User)
+
+    fl_name = models.CharField(
+        verbose_name='First and Last Name',
+        max_length=50,
+        unique=True,
+    )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['email', 'fl_name']
+
+    def __unicode__(self):
+        return self.user.username

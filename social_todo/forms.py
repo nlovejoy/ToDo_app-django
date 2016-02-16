@@ -1,5 +1,5 @@
 from django import forms
-from social_todo.models import Tasks, Users #,UserProfile
+from social_todo.models import Tasks, Users, Users2 #,UserProfile
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -12,12 +12,11 @@ class NewTaskForm(forms.ModelForm):
         fields = ('title', 'description', 'collaborators')
 
 class LoginForm(forms.ModelForm):
-    hashed_password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
-        model = Users
-        fields = ('email', 'hashed_password')
+        model = Users2
+        fields = ('email', 'password')
 
 class MyRegistrationForm(forms.ModelForm):
     class Meta:
-        model = Users
-        fields = ('email', 'fl_name', 'hashed_password')
+        model = Users2
+        fields = ('email', 'fl_name', 'password')

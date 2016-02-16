@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from social_todo.forms import NewTaskForm, MyRegistrationForm, LoginForm #,UserForm
 from django.contrib.auth import logout, authenticate, login
-from social_todo.models import Tasks, Users #,UserProfile
+from social_todo.models import Tasks, Users, Users2 #,UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.context_processors import csrf
 from django.contrib import auth
@@ -112,8 +112,8 @@ def login(request):
     if request.method == 'POST':
         #see if email and pw are valid
         email = request.POST['email'] # Gather the username and pw from login form
-        hashed_password = request.POST['hashed_password']
-        user = authenticate(email=email, hashed_password=hashed_password)
+        hpassword = request.POST['password']
+        user = authenticate(email=email, password=password)
         print (email)
         print (hashed_password)
         if user is not None: # Is the account active? It could have been disabled.
