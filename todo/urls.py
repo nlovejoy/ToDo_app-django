@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^social_todo/', include('social_todo.urls')),
     url(r'^user/', include('social_todo.urls')),
     url(r'^task/', include('social_todo.urls')),
+    url(r'^user/social_todo/', include('social_todo.urls')),
 ]
