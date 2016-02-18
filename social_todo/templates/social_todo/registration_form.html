@@ -2,6 +2,13 @@
 <h2>Registration Form</h2>
 <form id="login_form" method="post" action="/user/register">
   {% csrf_token %}
+  First and Last name: <input name="fl_name" type="text" value="" size="50" />
+  <br />
+  Email: <input name="username" type="email" value="" size="50" />
+  <br />
+  Password: <input name="password" type="password" value="" size="50" />
+  <br />
+
   {{ form }}
   <input type="submit" value="Register" class="sign-up-submit"/>
 </form>

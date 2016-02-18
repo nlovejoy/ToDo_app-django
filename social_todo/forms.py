@@ -5,10 +5,11 @@ from django.contrib.auth.forms import UserCreationForm
 
 class NewTaskForm(forms.ModelForm):
     # An inline class to provide additional information on the form.
+
     class Meta:
         # Provide an association between the ModelForm and a model
         model = Task
-        fields = ('title', 'description', 'collaborators')
+        fields = ('title', 'description', 'collaborator1', 'collaborator2', 'collaborator3')
 
 class LoginForm(forms.ModelForm):
     class Meta:
