@@ -5,10 +5,12 @@ from django.contrib.auth.models import User
 
 class Task(models.Model):
     owner = models.EmailField(max_length=50)
-    title = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
-    isComplete = models.CharField(max_length=200)
-    collaborators = models.IntegerField(default=0)
+    title = models.CharField(max_length=2000, help_text="Please enter task title")
+    description = models.CharField(max_length=2000, help_text="Please enter task description")
+    isComplete = models.BooleanField(default=False)
+    collaborator1 = models.EmailField(max_length=50, blank=True)
+    collaborator2 = models.EmailField(max_length=50, blank=True)
+    collaborator3 = models.EmailField(max_length=50, blank=True) #do I need to change this to link with Users model?
     def __str__(self):
             return self.title
 
