@@ -10,8 +10,7 @@
       </form>
       <form action="/task/complete/{{task.id}}" method="post">
           {% csrf_token %}
-          <button class="toggle-task">Mark something</button>
-
+          <button class="complete-task">Mark something</button>
       </form>
       {% endfor %}
   </ul>

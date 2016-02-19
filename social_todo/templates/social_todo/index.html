@@ -7,9 +7,28 @@
 
     <body>
 
+    {% if errors %}
+      <div style="color:red" class="validation-error">
+        <ul>
+            {% for error in errors %}
+            <li>{{ error }}errors</li>
+            {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if messages %}
+    <div style="color:red" class="validation-error">
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 
     {% if user.is_authenticated %}
-      <h1>Nikko says... hello {{ user.username }}!</h1>
+      <h1>Welcome, {{ user.first_name }}!</h1>
       {% include "social_todo/task_list.html" %}
       <br>
       {% include "social_todo/add_task.html" %}
@@ -22,7 +41,8 @@
 
     {% if user.is_authenticated %}
       <br>
-      <a href="/user/logout">Logout</a><br />
+      <a href="/user/logout" class="logout">Logout</a>
+      <br>
       {% else %}
 
     {% endif %}

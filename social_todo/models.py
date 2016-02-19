@@ -22,3 +22,5 @@ class Task(models.Model):
 #
 #     def __str__(self):
 #             return self.email
+
+# note, you could use MultiEmailField for the collaborators
