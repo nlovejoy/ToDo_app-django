@@ -7,6 +7,7 @@ from social_todo.models import Task, User#, Users2 ,UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.context_processors import csrf
 from django.contrib import auth
+from django.contrib import messages
 
 
 def index(request):
@@ -44,7 +45,7 @@ def add_task(request):
         if form.is_valid(): # Have we been provided with a valid form?
             form.save(commit=True) # Save the new task to the database.
             print ('task saved')
-            return HttpResponseRedirect('/social_todo/')
+            return HttpResponseRedirect('/')
         else:
             print ('form errors')
             print (form.errors)
@@ -54,12 +55,26 @@ def add_task(request):
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
-    return render_to_response('social_todo/add_task.html', {'form': form}, context)
+    return render_to_response('social_todo/index.html', {'form': form}, context)
 
 def register_user(request):
     context = RequestContext(request)
+
     if request.method == 'POST':
-        form = MyRegistrationForm(request.POST)     # create form populated with data
+        request.POST['username'] = request.POST['email']
+        request.POST['first_name'] = request.POST['fl_name']
+        form = MyRegistrationForm(request.POST)
+
+        if len(request.POST['email']) < 1 or len(request.POST['email']) > 50:
+            messages.error(request,'Invalid email address')
+            return HttpResponseRedirect('/')
+        if len(request.POST['fl_name']) < 1 or len(request.POST['fl_name']) > 50:
+            messages.error(request,'Invalid email address')
+            return HttpResponseRedirect('/')
+        if len(request.POST['password']) < 1 or len(request.POST['password']) > 50:
+            messages.error(request,'Invalid password')
+            return HttpResponseRedirect('/')
+
         if form.is_valid():
             user = form.save()
             user.set_password(user.password)
@@ -69,14 +84,18 @@ def register_user(request):
                                     )
             auth_login(request, user)
             print ("user registered")
-            return HttpResponseRedirect('/social_todo/')
+            return HttpResponseRedirect('/')
+        else:
+             messages.error(request, 'Account with this email already exists!')
+             return HttpResponseRedirect('/')
+
     else:#if not a POST request, then send back the blank form
         form = MyRegistrationForm()
     token = {}
     token.update(csrf(request))
     token['form'] = form
 
-    return render_to_response('social_todo/register_user.html', token)
+    return render_to_response('social_todo/index.html', token)
 
 def login(request):
     context = RequestContext(request)
@@ -91,12 +110,13 @@ def login(request):
             if user.is_active:
                 auth_login(request, user)
                 print ('user is active')
-                return HttpResponseRedirect('social_todo/')
+                return HttpResponseRedirect('/')
             else:
                 # error = 'Account disabled.'
                 print ('Account disabled.')
                 # return errorHandler(error)
         else:
+            messages.error(request, 'Invalid email address')
             print ('user is = None')
     else:
         # error = 'Invalid details entered.'
@@ -104,13 +124,11 @@ def login(request):
         print ('invalid details')
     return render_to_response('social_todo/index.html', {}, context)
 
-
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
-
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/social_todo/')
+    return HttpResponseRedirect('/')
 
 def delete_task(request,task_id):
     context = RequestContext(request)
@@ -129,7 +147,7 @@ def delete_task(request,task_id):
     print(task)
     task.delete()
     # return HttpResponse("true")
-    return render_to_response('social_todo/index.html', context)
+    return HttpResponseRedirect('/')
 
 def complete_task(request,task_id):
     context = RequestContext(request)
@@ -145,4 +163,4 @@ def complete_task(request,task_id):
         print ("bool changed to 1")
         task.save()
 
-    return render_to_response('social_todo/index.html', context)
+    return HttpResponseRedirect('/')

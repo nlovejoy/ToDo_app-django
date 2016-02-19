@@ -17,6 +17,20 @@ class LoginForm(forms.ModelForm):
         fields = ('username', 'password')
 
 class MyRegistrationForm(forms.ModelForm):
+    # username = forms.EmailField(max_length=50, min_length=1)
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'password')
+
+    # def clean(self):
+    #     cleaned_data = super(MyRegistrationForm, self).clean()
+    #     username = cleaned_data.get("username")
+    #     first_name = cleaned_data.get("first_name")
+    #     password = cleaned_data.get("password")
+    #
+    #     if len(request.POST['email']) < 1:
+    #         raise ValidationError('Invalid email address, must be longer than 1')
+    #     if len(request.POST['email']) < 50:
+    #         raise ValidationError('Invalid email address, must be shorter than 50')
+    #     return data
